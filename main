@@ -1,0 +1,74 @@
+#include <Servo.h>
+
+// Create a Servo object
+Servo servo;
+
+// Define pins and angles
+const int servoPin = 9;        // Pin connected to the servo
+const int openAngle = 0;       // Angle to open the servo
+const int closeAngle = 90;     // Angle to close the servo
+
+// Define ultrasonic sensor pins
+const int trigPin = 5;         // Pin for triggering the sensor
+const int echoPin = 6;         // Pin for receiving the echo
+
+// Variables for distance measurement
+long distance, averageDistance;
+long averDist[3];              // Array to store distance measurements
+
+const int distanceThreshold = 20; // Distance threshold for servo activation
+
+void setup() {
+    // Initialize serial communication
+    Serial.begin(9600);
+    
+    // Set pin modes
+    pinMode(trigPin, OUTPUT);
+    pinMode(echoPin, INPUT);
+    
+    // Initialize the servo to the closed position
+    servo.attach(servoPin);
+    servo.write(closeAngle);
+    delay(100);
+    servo.detach();
+}
+
+void loop() {
+    // Measure distance three times to calculate the average
+    for (int i = 0; i <= 2; i++) {
+        distance = readDistance();
+        averDist[i] = distance;
+        delay(10);
+    }
+    
+    // Calculate the average distance
+    averageDistance = (averDist[0] + averDist[1] + averDist[2]) / 3;
+    Serial.println(averageDistance);
+    
+    // Check if the average distance is below the threshold
+    if (averageDistance <= distanceThreshold) {
+        // Open the servo if the threshold is met
+        servo.attach(servoPin);
+        delay(1);
+        servo.write(openAngle);
+        delay(3500);
+    } else {
+        // Close the servo otherwise
+        servo.write(closeAngle);
+        delay(100);
+        servo.detach();
+    }
+}
+
+float readDistance() {
+    // Trigger the ultrasonic sensor
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    
+    // Read the echo and calculate the distance
+    float distance = pulseIn(echoPin, HIGH) / 58.00;
+    return distance;
+}
