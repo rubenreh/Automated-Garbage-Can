@@ -1,3 +1,6 @@
+//Author : Ruben Rehal
+//Date : July 17, 2022
+
 #include <Servo.h>
 
 // Create a Servo object
