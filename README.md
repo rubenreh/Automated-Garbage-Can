@@ -1,3 +1,5 @@
+# Automated Garbage Can
+
 One of the projects I’m particularly proud of is an older creation: an automated garbage can designed to assist people with disabilities. This project reflects my passion for using technology to solve real-world problems and enhance everyday life.
 
 How It Works
